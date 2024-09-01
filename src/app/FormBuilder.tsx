@@ -5,7 +5,8 @@ import FormPreview from './FormPreview';
 const FormBuilder = () => {
   const [formFields, setFormFields] = useState<{ id: number; type: string; label: string; required: boolean; options: string[]; }[]>([]);
   const [formName, setFormName] = useState('');
-
+  const [formTitle, setFormTitle] = useState('');
+  const [formLogo, setFormLogo] = useState('');
   const addField = (type: string) => {
     const newField = {
       id: Date.now(),
@@ -73,6 +74,16 @@ const FormBuilder = () => {
       alert('Failed to save form. Please try again.');
     }
   };
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormLogo(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -85,6 +96,22 @@ const FormBuilder = () => {
           placeholder="Form Name"
           className="w-full p-2 mb-4 border rounded"
         />
+        <input
+          type="text"
+          value={formTitle}
+          onChange={(e) => setFormTitle(e.target.value)}
+          placeholder="Form Title (displayed to users)"
+          className="w-full p-2 mb-4 border rounded"
+        />
+        <div className="mb-4">
+          <label className="block mb-2">Form Logo:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleLogoUpload}
+            className="w-full p-2 border rounded"
+          />
+        </div>
         <div className="mb-4">
           <button onClick={() => addField('text')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Text Input</button>
           <button onClick={() => addField('number')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Number Input</button>
@@ -135,7 +162,7 @@ const FormBuilder = () => {
         <button onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</button>
       </div>
       <div className="w-full md:w-1/2 p-4">
-        <FormPreview fields={formFields} />
+        <FormPreview fields={formFields} title={formTitle} logo={formLogo} />
       </div>
     </div>
   );

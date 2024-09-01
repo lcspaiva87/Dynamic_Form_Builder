@@ -2,10 +2,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode } from "react";
 
-const FormPreview = ({ fields }: any) => {
+const FormPreview = ({ fields, title, logo }: any) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Form Preview</h2>
+      {logo && (
+        <div className="mb-4">
+          <img src={logo} alt="Form Logo" className="max-w-xs mx-auto" />
+        </div>
+      )}
+      {title && (
+        <h1 className="text-2xl font-bold mb-4 text-center">{title}</h1>
+      )}
       <form className="space-y-4">
         {fields.map((field: { type: any; id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; required: boolean | undefined; options: any[]; }) => {
           switch (field.type) {
