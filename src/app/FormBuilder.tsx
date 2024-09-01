@@ -7,7 +7,6 @@ const FormBuilder = () => {
   const [formName, setFormName] = useState('');
   const [formTitle, setFormTitle] = useState('');
   const [formLogo, setFormLogo] = useState('');
-  const [savedForms, setSavedForms] = useState([]);
 
   const addField = (type: string) => {
     const newField = {
@@ -59,7 +58,7 @@ const FormBuilder = () => {
 
   const saveForm = async () => {
     try {
-      const response = await fetch('/api/save-form', {
+      const response = await fetch('/api/form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
