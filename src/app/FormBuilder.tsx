@@ -94,8 +94,14 @@ const FormBuilder = () => {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-1/2 p-4">
-        <h2 className="text-2xl font-bold mb-4">Form Builder</h2>
+      <div className="w-full md:w-1/2 p-4 items-center">
+        <div className='flex items-center w-full justify-between mb-4+'>
+
+          <h2 className="text-2xl font-bold ">Form Builder</h2>
+          <button className="bg-blue-500 text-white p-2 mr-2 rounded">
+            <a href="/form">Formulario registrado</a>
+          </button>
+        </div>
         <input
           type="text"
           value={formName}
@@ -119,7 +125,7 @@ const FormBuilder = () => {
             className="w-full p-2 border rounded"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-4 flex gap-3 flex-wrap ">
           <button onClick={() => addField('text')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Text Input</button>
           <button onClick={() => addField('number')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Number Input</button>
           <button onClick={() => addField('email')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Email Input</button>
@@ -169,7 +175,7 @@ const FormBuilder = () => {
         <button onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</button>
       </div>
       <div className="w-full md:w-1/2 p-4">
-        <FormPreview fields={formFields} title={formTitle} logo={formLogo} />
+        <FormPreview fields={formFields} title={formTitle} logo={formLogo} name={formName} />
       </div>
     </div>
   );

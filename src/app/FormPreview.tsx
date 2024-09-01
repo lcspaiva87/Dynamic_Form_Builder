@@ -12,9 +12,10 @@ type FormPreviewProps = {
   fields: Field[];
   title: string;
   logo: string;
+  name: string;
 };
 
-const FormPreview = ({ fields, title, logo }: FormPreviewProps) => {
+const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   console.log('title', title);
   const handleInputChange = (fieldId: Key | null | undefined, value: string) => {
@@ -30,13 +31,16 @@ const FormPreview = ({ fields, title, logo }: FormPreviewProps) => {
 
   return (
     <div className="border p-4 rounded">
+      {name && (
+        <h1 className="text-2xl font-bold mb-4 text-center">{name}</h1>
+      )}
       {logo && (
         <div className="mb-4">
           <img src={logo} alt="Form Logo" className="max-w-xs mx-auto" />
         </div>
       )}
       {title && (
-        <h1 className="text-2xl font-bold mb-4 text-center">{title}</h1>
+        <h1 className="text-sm font-bold mb-4 text-center">{title}</h1>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         {fields?.map((field: { type: any; id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; required: boolean | undefined; options: any[]; }) => {
