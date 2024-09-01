@@ -6,7 +6,15 @@ import { useEffect, useState } from 'react';
 export default function FormPage({ params: { id } }: any) {
 
 
-  const [form, setForm] = useState(null);
+  type Field = {
+    // define the properties of the Field type
+  };
+
+  const [form, setForm] = useState<{
+    logo: string;
+    fields: Field[];
+    name: string; title: string
+  }[] | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -29,11 +37,13 @@ export default function FormPage({ params: { id } }: any) {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">{form[0].title}</h1>
+
       <FormPreview
+        //@ts-ignore
         fields={form[0].fields}
         title={form[0].title}
         logo={form[0].logo}
-      />
+        name={form[0].name} />
     </div>
   );
 }

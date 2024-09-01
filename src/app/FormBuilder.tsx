@@ -95,7 +95,7 @@ const FormBuilder = () => {
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 p-4 items-center">
-        <div className='flex items-center w-full justify-between mb-4+'>
+        <div className='flex items-center w-full justify-between mb-4'>
 
           <h2 className="text-2xl font-bold ">Form Builder</h2>
           <button className="bg-blue-500 text-white p-2 mr-2 rounded">

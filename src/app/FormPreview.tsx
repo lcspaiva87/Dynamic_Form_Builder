@@ -19,7 +19,7 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   console.log('title', title);
   const handleInputChange = (fieldId: Key | null | undefined, value: string) => {
-    setFormData({ ...formData, [fieldId]: value });
+    setFormData({ ...formData, [String(fieldId)]: value });
   };
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -105,14 +105,13 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                       <input
                         type="checkbox"
                         id={`${field.id}-${index}`}
-                        name={field.id}
                         value={option}
                         className="mr-2"
                         onChange={(e) => {
                           const currentValues = formData[field.id as string] || [];
                           const newValues = e.target.checked
                             ? [...currentValues, option]
-                            : currentValues.filter(v => v !== option);
+                            : currentValues.filter((v: any) => v !== option);
                           handleInputChange(field.id, newValues);
                         }}
                       />
