@@ -7,6 +7,8 @@ const FormBuilder = () => {
   const [formName, setFormName] = useState('');
   const [formTitle, setFormTitle] = useState('');
   const [formLogo, setFormLogo] = useState('');
+  const [savedForms, setSavedForms] = useState([]);
+
   const addField = (type: string) => {
     const newField = {
       id: Date.now(),
@@ -62,10 +64,16 @@ const FormBuilder = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: formName, fields: formFields }),
+        body: JSON.stringify({
+          name: formName,
+          title: formTitle,
+          logo: formLogo,
+          fields: formFields
+        }),
       });
       if (response.ok) {
         alert('Form saved successfully!');
+
       } else {
         throw new Error('Failed to save form');
       }
@@ -74,12 +82,12 @@ const FormBuilder = () => {
       alert('Failed to save form. Please try again.');
     }
   };
-  const handleLogoUpload = (e) => {
-    const file = e.target.files[0];
+  const handleLogoUpload: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormLogo(reader.result);
+        setFormLogo(reader.result as string || '');
       };
       reader.readAsDataURL(file);
     }
