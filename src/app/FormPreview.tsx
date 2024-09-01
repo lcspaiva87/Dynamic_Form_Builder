@@ -1,3 +1,4 @@
+import { Textarea } from '@/components/ui/textarea';
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, useState } from 'react';
 
 type Field = {
@@ -94,6 +95,13 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                       <option key={index} value={option}>{option}</option>
                     ))}
                   </select>
+                </div>
+              );
+            case 'textarea':
+              return (
+                <div key={field.id}>
+                  <label className="block mb-1">{field.label}{field.required && '*'}</label>
+                  <Textarea required={field.required} />
                 </div>
               );
             case 'radio':
