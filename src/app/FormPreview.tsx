@@ -96,14 +96,14 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                   </select>
                 </div>
               );
-            case 'checkbox':
+            case 'radio':
               return (
                 <div key={field.id}>
                   <label className="block mb-1">{field.label}{field.required && '*'}</label>
                   {field.options.map((option, index) => (
                     <div key={index} className="flex items-center">
                       <input
-                        type="checkbox"
+                        type="radio"
                         id={`${field.id}-${index}`}
                         value={option}
                         className="mr-2"
