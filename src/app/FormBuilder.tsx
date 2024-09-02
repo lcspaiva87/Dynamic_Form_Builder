@@ -1,4 +1,5 @@
 "use client"
+import Link from 'next/link';
 import { useState } from 'react';
 import FormPreview from './FormPreview';
 
@@ -98,9 +99,9 @@ const FormBuilder = () => {
         <div className='flex items-center w-full justify-between mb-4'>
 
           <h2 className="text-2xl font-bold ">Form Builder</h2>
-          <button className="bg-blue-500 text-white p-2 mr-2 rounded">
-            <a href="/form">Formulario registrado</a>
-          </button>
+          <Link href="/form" className="bg-blue-500 text-white p-2 mr-2 rounded">
+            Formulario registrado
+          </Link>
         </div>
         <input
           type="text"
