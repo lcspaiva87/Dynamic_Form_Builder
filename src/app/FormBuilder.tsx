@@ -132,6 +132,9 @@ const FormBuilder = () => {
           <button onClick={() => addField('select')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Select</button>
           <button onClick={() => addField('textarea')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Textarea</button>
           <button onClick={() => addField('radio')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Checkbox</button>
+          <button onClick={() => addField('cep')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add CEP</button>
+          <button onClick={() => addField('cpf')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add CPF</button>
+          <button onClick={() => addField('rg')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add RG</button>
 
         </div>
         {formFields.map(field => (

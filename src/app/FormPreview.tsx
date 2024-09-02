@@ -1,9 +1,10 @@
 import { Textarea } from '@/components/ui/textarea';
+import { formatCEP, formatCPF, formatRG, validateCEP, validateCPF, validateRG } from '@/lib/validations';
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, useState } from 'react';
 
 type Field = {
   type: string;
-  id: Key | null | undefined;
+  id: Key | null | undefined | bigint;
   label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined;
   required: boolean | undefined;
   options: any[];
@@ -19,13 +20,37 @@ type FormPreviewProps = {
 const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
   console.log('title', title);
-  const handleInputChange = (fieldId: Key | null | undefined, value: string) => {
-    setFormData({ ...formData, [String(fieldId)]: value });
-  };
+  const handleInputChange = (fieldId: Key | null | undefined, value: string, fieldType: string | undefined) => {
+    let formattedValue = value;
+    let error = null;
 
+    switch (fieldType) {
+      case 'cep':
+        formattedValue = formatCEP(value.replace(/\D/g, ''));
+        if (!validateCEP(formattedValue)) {
+          error = 'CEP inválido';
+        }
+        break;
+      case 'cpf':
+        formattedValue = formatCPF(value.replace(/\D/g, ''));
+        if (!validateCPF(formattedValue)) {
+          error = 'CPF inválido';
+        }
+        break;
+      case 'rg':
+        formattedValue = formatRG(value.replace(/\D/g, ''));
+        if (!validateRG(formattedValue)) {
+          error = 'RG inválido';
+        }
+        break;
+    }
+
+    setFormData({ ...formData, [fieldId as string]: formattedValue });
+    setErrors({ ...errors, [fieldId as string]: error });
+  };
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    // Aqui você pode implementar a lógica para enviar os dados do formulário
     console.log('Form data:', formData);
     alert('Formulário enviado com sucesso!');
   };
@@ -47,6 +72,11 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
         {fields?.map((field: { type: any; id: Key | null | undefined; label: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; required: boolean | undefined; options: any[]; }) => {
           switch (field.type) {
             case 'text':
+            case 'number':
+            case 'email':
+            case 'cep':
+            case 'cpf':
+            case 'rg':
               return (
                 <div key={field.id}>
                   <label className="block mb-1">{field.label}{field.required && '*'}</label>
@@ -54,8 +84,10 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                     type="text"
                     className="w-full p-2 border rounded"
                     required={field.required}
-                    onChange={(e) => handleInputChange(field.id, e.target.value)}
+                    onChange={(e) => handleInputChange(field.id, e.target.value, field.type)}
                   />
+                  {errors[String(field.id)] && <p className="text-red-500 text-sm mt-1">{errors[String(field.id)]}</p>}
+
                 </div>
               );
             case 'number':
@@ -66,22 +98,11 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                     type="number"
                     className="w-full p-2 border rounded"
                     required={field.required}
-                    onChange={(e) => handleInputChange(field.id, e.target.value)}
+                    onChange={(e) => handleInputChange(field.id, e.target.value, field.type)}
                   />
                 </div>
               );
-            case 'email':
-              return (
-                <div key={field.id}>
-                  <label className="block mb-1">{field.label}{field.required && '*'}</label>
-                  <input
-                    type="email"
-                    className="w-full p-2 border rounded"
-                    required={field.required}
-                    onChange={(e) => handleInputChange(field.id, e.target.value)}
-                  />
-                </div>
-              );
+
             case 'select':
               return (
                 <div key={field.id}>
@@ -89,7 +110,7 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                   <select
                     className="w-full p-2 border rounded"
                     required={field.required}
-                    onChange={(e) => handleInputChange(field.id, e.target.value)}
+                    onChange={(e) => handleInputChange(field.id, e.target.value, field.type)}
                   >
                     {field.options.map((option, index) => (
                       <option key={index} value={option}>{option}</option>
@@ -120,7 +141,7 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
                           const newValues = e.target.checked
                             ? [...currentValues, option]
                             : currentValues.filter((v: any) => v !== option);
-                          handleInputChange(field.id, newValues);
+                          handleInputChange(field.id, newValues, field.type);
                         }}
                       />
                       <label htmlFor={`${field.id}-${index}`}>{option}</label>

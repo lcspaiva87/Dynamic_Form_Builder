@@ -7,7 +7,11 @@ export default function FormPage({ params: { id } }: any) {
 
 
   type Field = {
-    // define the properties of the Field type
+    id: string;
+    label: string;
+    type: string;
+    required: boolean;
+    options: string[];
   };
 
   const [form, setForm] = useState<{
