@@ -44,6 +44,7 @@ export default function FormPage({ params: { id } }: any) {
 
       <FormPreview
         //@ts-ignore
+        id={id}
         fields={form[0].fields}
         title={form[0].title}
         logo={form[0].logo}

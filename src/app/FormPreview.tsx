@@ -16,11 +16,13 @@ type FormPreviewProps = {
   title: string;
   logo: string;
   name: string;
+  id: string;
 };
 
-const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
+const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
-  console.log('title', title);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleInputChange = (fieldId: Key | null | undefined, value: string, fieldType: string | undefined) => {
     let formattedValue = value;
     let error = null;
@@ -50,14 +52,46 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
         break;
     }
 
-    setFormData({ ...formData, [fieldId as string]: formattedValue });
+    setFormData({ ...formData, [String(fieldId)]: value });
     setErrors({ ...errors, [fieldId as string]: error });
   };
   const [errors, setErrors] = useState<Record<string, string | null>>({});
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log('Form data:', formData);
-    alert('Formulário enviado com sucesso!');
+    if (Object.values(errors).some(error => error !== null)) {
+      alert('Por favor, corrija os erros antes de enviar o formulário.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/save-data-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formId: id,
+          data: formData,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Formulário enviado com sucesso:', result);
+        alert('Formulário enviado com sucesso!');
+        setFormData({}); // Limpa o formulário após o envio bem-sucedido
+      } else {
+        throw new Error('Falha ao enviar o formulário');
+      }
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error);
+      alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

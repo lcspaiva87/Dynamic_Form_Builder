@@ -1,4 +1,5 @@
 "use client"
+import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { useState } from 'react';
 import FormPreview from './FormPreview';
@@ -8,7 +9,7 @@ const FormBuilder = () => {
   const [formName, setFormName] = useState('');
   const [formTitle, setFormTitle] = useState('');
   const [formLogo, setFormLogo] = useState('');
-
+  const { toast } = useToast()
   const addField = (type: string) => {
     const newField = {
       id: Date.now(),
@@ -72,8 +73,10 @@ const FormBuilder = () => {
         }),
       });
       if (response.ok) {
-        alert('Form saved successfully!');
-
+        toast({
+          title: "Form saved",
+          description: "Your form has been saved successfully",
+        })
       } else {
         throw new Error('Failed to save form');
       }
