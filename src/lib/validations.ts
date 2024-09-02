@@ -1,6 +1,6 @@
 
 export function validateCEP(cep: string) {
-  const cepRegex = /^\d{5}-?\d{3}$/;
+  const cepRegex = /^\d{5}-\d{3}$/;
   return cepRegex.test(cep);
 }
 
@@ -27,6 +27,10 @@ export function validateCPF(cpf: string) {
   return true;
 }
 
+export function validatePhone(phone: string) {
+  const phoneRegex = /^(\(?\d{2}\)?\s?)(\d{4,5}-?\d{4})$/;
+  return phoneRegex.test(phone);
+}
 export function validateRG(rg: string) {
   const rgRegex = /^(\d{1,2})\.?(\d{3})\.?(\d{3})-?(\d|X|x)$/;
   return rgRegex.test(rg);

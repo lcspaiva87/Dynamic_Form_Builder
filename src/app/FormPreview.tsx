@@ -1,6 +1,7 @@
 import { Textarea } from '@/components/ui/textarea';
-import { formatCEP, formatCPF, formatRG, validateCEP, validateCPF, validateRG } from '@/lib/validations';
+import { formatCEP, formatCPF, formatRG, validateCEP, validateCPF, validatePhone, validateRG } from '@/lib/validations';
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, useState } from 'react';
+import InputMask from 'react-input-mask';
 
 type Field = {
   type: string;
@@ -42,6 +43,10 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
         if (!validateRG(formattedValue)) {
           error = 'RG inválido';
         }
+      case 'phone':
+        if (!validatePhone(value)) {
+          error = 'Telefone inválido';
+        }
         break;
     }
 
@@ -74,9 +79,6 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
             case 'text':
             case 'number':
             case 'email':
-            case 'cep':
-            case 'cpf':
-            case 'rg':
               return (
                 <div key={field.id}>
                   <label className="block mb-1">{field.label}{field.required && '*'}</label>
@@ -90,16 +92,46 @@ const FormPreview = ({ fields, title, logo, name }: FormPreviewProps) => {
 
                 </div>
               );
-            case 'number':
+            case 'cep':
               return (
                 <div key={field.id}>
                   <label className="block mb-1">{field.label}{field.required && '*'}</label>
-                  <input
-                    type="number"
-                    className="w-full p-2 border rounded"
+                  <InputMask
+                    mask="99999-999"
+                    className={`w-full p-2 border rounded ${errors[String(field.id)] ? 'border-red-500' : ''}`}
                     required={field.required}
-                    onChange={(e) => handleInputChange(field.id, e.target.value, field.type)}
+                    value={formData[String(field.id) as string] || ''}
+                    onChange={(e) => handleInputChange(String(field.id), e.target.value, field.type)}
                   />
+                  {errors[String(field.id)] && <p className="text-red-500 text-sm mt-1">{errors[String(field.id)]}</p>}
+                </div>
+              );
+            case 'cpf':
+              return (
+                <div key={field.id}>
+                  <label className="block mb-1">{field.label}{field.required && '*'}</label>
+                  <InputMask
+                    mask="999.999.999-99"
+                    className={`w-full p-2 border rounded ${errors[field.id as string] ? 'border-red-500' : ''}`}
+                    required={field.required}
+                    value={formData[field.id as string] || ''}
+                    onChange={(e) => handleInputChange(field.id as string, e.target.value, field.type)}
+                  />
+                  {errors[String(field.id)] && <p className="text-red-500 text-sm mt-1">{errors[String(field.id)]}</p>}
+                </div>
+              );
+            case 'phone':
+              return (
+                <div key={field.id}>
+                  <label className="block mb-1">{field.label}{field.required && '*'}</label>
+                  <InputMask
+                    mask="(99) 99999-9999"
+                    className={`w-full p-2 border rounded ${errors[field.id as string] ? 'border-red-500' : ''}`}
+                    required={field.required}
+                    value={formData[field.id as string] || ''}
+                    onChange={(e) => handleInputChange(field.id as string, e.target.value, field.type)}
+                  />
+                  {errors[String(field.id)] && <p className="text-red-500 text-sm mt-1">{errors[String(field.id)]}</p>}
                 </div>
               );
 

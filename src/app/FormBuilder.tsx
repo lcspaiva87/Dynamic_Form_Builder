@@ -136,6 +136,8 @@ const FormBuilder = () => {
           <button onClick={() => addField('cep')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add CEP</button>
           <button onClick={() => addField('cpf')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add CPF</button>
           <button onClick={() => addField('rg')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add RG</button>
+          <button onClick={() => addField('phone')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Phone</button>
+
 
         </div>
         {formFields.map(field => (
