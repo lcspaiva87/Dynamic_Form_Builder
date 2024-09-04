@@ -1,4 +1,6 @@
 "use client"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -95,7 +97,18 @@ const FormBuilder = () => {
       reader.readAsDataURL(file);
     }
   };
-
+  const fieldTypes = [
+    { type: 'text', label: 'Texto' },
+    { type: 'number', label: 'Número' },
+    { type: 'email', label: 'E-mail' },
+    { type: 'select', label: 'Seleção' },
+    { type: 'textarea', label: 'Área de Texto' },
+    { type: 'radio', label: 'Múltipla Escolha' },
+    { type: 'cep', label: 'CEP' },
+    { type: 'cpf', label: 'CPF' },
+    { type: 'rg', label: 'RG' },
+    { type: 'phone', label: 'Telefone' }
+  ];
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 p-4 items-center">
@@ -106,14 +119,14 @@ const FormBuilder = () => {
             Formulario registrado
           </Link>
         </div>
-        <input
+        <Input
           type="text"
           value={formName}
           onChange={(e) => setFormName(e.target.value)}
           placeholder="Form Name"
           className="w-full p-2 mb-4 border rounded"
         />
-        <input
+        <Input
           type="text"
           value={formTitle}
           onChange={(e) => setFormTitle(e.target.value)}
@@ -122,7 +135,7 @@ const FormBuilder = () => {
         />
         <div className="mb-4">
           <label className="block mb-2">Form Logo:</label>
-          <input
+          <Input
             type="file"
             accept="image/*"
             onChange={handleLogoUpload}
@@ -130,17 +143,15 @@ const FormBuilder = () => {
           />
         </div>
         <div className="mb-4 flex gap-3 flex-wrap ">
-          <button onClick={() => addField('text')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Text Input</button>
-          <button onClick={() => addField('number')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Number Input</button>
-          <button onClick={() => addField('email')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Email Input</button>
-          <button onClick={() => addField('select')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Select</button>
-          <button onClick={() => addField('textarea')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Textarea</button>
-          <button onClick={() => addField('radio')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Checkbox</button>
-          <button onClick={() => addField('cep')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add CEP</button>
-          <button onClick={() => addField('cpf')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add CPF</button>
-          <button onClick={() => addField('rg')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add RG</button>
-          <button onClick={() => addField('phone')} className="bg-blue-500 text-white p-2 mr-2 rounded">Add Phone</button>
-
+          {fieldTypes.map((field) => (
+            <Button
+              key={field.type}
+              onClick={() => addField(field.type)}
+              className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded transition duration-300 ease-in-out"
+            >
+              Adicionar {field.label}
+            </Button>
+          ))}
 
         </div>
         {formFields.map(field => (
@@ -172,16 +183,16 @@ const FormBuilder = () => {
                       onChange={(e) => updateOption(field.id, index, e.target.value)}
                       className="flex-grow p-2 mr-2 border rounded"
                     />
-                    <button onClick={() => removeOption(field.id, index)} className="bg-red-500 text-white p-2 rounded">Remove</button>
+                    <Button onClick={() => removeOption(field.id, index)} className="bg-red-500 text-white p-2 rounded">Remove</Button>
                   </div>
                 ))}
-                <button onClick={() => addOption(field.id)} className="bg-green-500 text-white p-2 rounded">Add Option</button>
+                <Button onClick={() => addOption(field.id)} className="bg-green-500 text-white p-2 rounded">Add Option</Button>
               </div>
             )}
-            <button onClick={() => removeField(field.id)} className="bg-red-500 text-white p-2 mt-2 rounded">Remove Field</button>
+            <Button onClick={() => removeField(field.id)} className="bg-red-500 text-white p-2 mt-2 rounded">Remove Field</Button>
           </div>
         ))}
-        <button onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</button>
+        <Button onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</Button>
       </div>
       <div className="w-full md:w-1/2 p-4">
         <FormPreview fields={formFields} title={formTitle} logo={formLogo} name={formName} id={''} />

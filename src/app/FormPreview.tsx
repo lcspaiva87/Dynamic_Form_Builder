@@ -130,10 +130,27 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
                 <div key={field.id}>
                   <label className="block mb-1">{field.label}{field.required && '*'}</label>
                   <input
-                    type="text"
+                    type={field.type}
                     className="w-full p-2 border rounded"
                     required={field.required}
-                    onChange={(e) => handleInputChange(field.id, e.target.value, field.type)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (field.type === 'email') {
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(value)) {
+                          setErrors((prevErrors) => ({
+                            ...prevErrors,
+                            [String(field.id)]: 'Email inválido',
+                          }));
+                        } else {
+                          setErrors((prevErrors) => {
+                            const { [String(field.id)]: _, ...rest } = prevErrors;
+                            return rest;
+                          });
+                        }
+                      }
+                      handleInputChange(field.id, value, field.type);
+                    }}
                   />
                   {errors[String(field.id)] && <p className="text-red-500 text-sm mt-1">{errors[String(field.id)]}</p>}
 
