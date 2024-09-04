@@ -192,7 +192,11 @@ const FormBuilder = () => {
             <Button onClick={() => removeField(field.id)} className="bg-red-500 text-white p-2 mt-2 rounded">Remove Field</Button>
           </div>
         ))}
-        <Button onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</Button>
+        <Button disabled={
+          !formFields.length ||
+          !formName ||
+          !formTitle
+        } onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</Button>
       </div>
       <div className="w-full md:w-1/2 p-4">
         <FormPreview fields={formFields} title={formTitle} logo={formLogo} name={formName} id={''} />

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { formatCEP, formatCPF, formatRG, validateCEP, validateCPF, validatePhone, validateRG } from '@/lib/validations';
 import CryptoJS from 'crypto-js';
@@ -249,7 +250,9 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
               return null;
           }
         })}
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">Submit</button>
+        <Button className="bg-blue-500 text-white p-2 rounded">
+          Vizualiar formulário
+        </Button>
       </form>
     </div>
   );
