@@ -134,7 +134,7 @@ const FormBuilder = () => {
           className="w-full p-2 mb-4 border rounded"
         />
         <div className="mb-4">
-          <label className="block mb-2">Form Logo:</label>
+          <label className="block mb-2">Logo do formulario</label>
           <Input
             type="file"
             accept="image/*"
