@@ -1,5 +1,6 @@
 import { Textarea } from '@/components/ui/textarea';
 import { formatCEP, formatCPF, formatRG, validateCEP, validateCPF, validatePhone, validateRG } from '@/lib/validations';
+import CryptoJS from 'crypto-js';
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, useState } from 'react';
 import InputMask from 'react-input-mask';
 
@@ -55,7 +56,19 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
     setFormData({ ...formData, [String(fieldId)]: value });
     setErrors({ ...errors, [fieldId as string]: error });
   };
+  function encryptData(data: string, secretKey: string): string {
+    return CryptoJS.AES.encrypt(data, secretKey).toString();
+  }
+
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const secretKey = 'sua-chave-secreta';
+
+  // Criptografar todos os valores em formData
+  const encryptedFormData = Object.fromEntries(
+    Object.entries(formData).map(([key, value]) => [key, encryptData(value, secretKey)])
+  );
+
+  console.log('Dados criptografados:', encryptedFormData);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -67,6 +80,10 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
     setIsSubmitting(true);
 
     try {
+      const encryptedFormData = Object.fromEntries(
+        Object.entries(formData).map(([key, value]) => [key, encryptData(value, secretKey)])
+      );
+
       const response = await fetch('/api/save-data-form', {
         method: 'POST',
         headers: {
@@ -74,7 +91,7 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
         },
         body: JSON.stringify({
           formId: id,
-          data: formData,
+          data: encryptedFormData,
         }),
       });
 
@@ -83,17 +100,13 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
         console.log('Formulário enviado com sucesso:', result);
         alert('Formulário enviado com sucesso!');
         setFormData({}); // Limpa o formulário após o envio bem-sucedido
-      } else {
-        throw new Error('Falha ao enviar o formulário');
       }
     } catch (error) {
-      console.error('Erro ao enviar formulário:', error);
-      alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.');
+      console.error('Erro ao enviar o formulário:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <div className="border p-4 rounded">
       {name && (

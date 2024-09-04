@@ -1,4 +1,5 @@
 "use client"
+import CryptoJS from 'crypto-js';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -29,10 +30,17 @@ interface FormResponse {
   createdAt: string;
 }
 
+// Função para descriptografar dados
+function decryptData(data: string, secretKey: string): string {
+  const bytes = CryptoJS.AES.decrypt(data, secretKey);
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
+
 export default function Dashboard() {
-  const id = "66d53582e7c2354e60f9db4f";
+  const id = "66d51d179e9d9324744971f0";
   const [responses, setResponses] = useState<FormResponse[]>([]);
   const [form, setForm] = useState<Form[]>([]);
+  const secretKey = 'sua-chave-secreta';
 
   useEffect(() => {
     if (id) {
@@ -45,7 +53,18 @@ export default function Dashboard() {
     const response = await fetch(`/api/save-data-form`);
     if (response.ok) {
       const data = await response.json();
-      setResponses(data);
+      const decryptedData = data.map((response: FormResponse) => {
+        const decryptedResponseData = Object.fromEntries(
+          Object.entries(response.data).map(([key, value]) => [
+            key,
+            Array.isArray(value)
+              ? value.map((v) => decryptData(v, secretKey))
+              : decryptData(value, secretKey),
+          ])
+        );
+        return { ...response, data: decryptedResponseData };
+      });
+      setResponses(decryptedData);
     }
   }
 
