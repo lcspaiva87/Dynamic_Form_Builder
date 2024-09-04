@@ -87,14 +87,36 @@ const FormBuilder = () => {
       alert('Failed to save form. Please try again.');
     }
   };
-  const handleLogoUpload: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleLogoUpload: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormLogo(reader.result as string || '');
-      };
-      reader.readAsDataURL(file);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const { fileUrl } = await response.json();
+          setFormLogo(fileUrl);
+          toast({
+            title: "Logo uploaded",
+            description: "Your logo has been uploaded successfully",
+          });
+        } else {
+          throw new Error('Failed to upload logo');
+        }
+      } catch (error) {
+        console.error('Error uploading logo:', error);
+        toast({
+          title: "Upload failed",
+          description: "Failed to upload logo. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
   const fieldTypes = [
