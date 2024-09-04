@@ -123,14 +123,14 @@ const FormBuilder = () => {
           type="text"
           value={formName}
           onChange={(e) => setFormName(e.target.value)}
-          placeholder="Form Name"
+          placeholder="Titulo do Formulario "
           className="w-full p-2 mb-4 border rounded"
         />
         <Input
           type="text"
           value={formTitle}
           onChange={(e) => setFormTitle(e.target.value)}
-          placeholder="Form Title (displayed to users)"
+          placeholder="Subtitulo do Formulario"
           className="w-full p-2 mb-4 border rounded"
         />
         <div className="mb-4">
@@ -160,7 +160,7 @@ const FormBuilder = () => {
               type="text"
               value={field.label}
               onChange={(e) => updateField(field.id, { label: e.target.value })}
-              placeholder="Field Label"
+              placeholder="Digite o rótulo do campo"
               className="w-full p-2 mb-2 border rounded"
             />
             <div className="flex items-center mb-2">
