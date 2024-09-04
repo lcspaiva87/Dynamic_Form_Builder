@@ -184,7 +184,7 @@ const FormBuilder = () => {
         <button onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</button>
       </div>
       <div className="w-full md:w-1/2 p-4">
-        <FormPreview fields={formFields} title={formTitle} logo={formLogo} name={formName} />
+        <FormPreview fields={formFields} title={formTitle} logo={formLogo} name={formName} id={''} />
       </div>
     </div>
   );
