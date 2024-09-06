@@ -5,7 +5,7 @@ import admin from 'firebase-admin';
 import { NextRequest, NextResponse } from 'next/server';
 import { extname } from 'path';
 
-// Inicialize o Firebase Admin SDK
+
 if (!admin.apps.length) {
   const private_key = process.env.private_key?.replace(/\\n/g, '\n');
   const firebaseConfig: any = {
