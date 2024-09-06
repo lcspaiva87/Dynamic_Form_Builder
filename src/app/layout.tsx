@@ -1,4 +1,4 @@
-import { SideBar } from '@/components/ui/Sidebar-'
+import { SideBar } from '@/components/ui/Sidebar/Sidebar'
 import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'

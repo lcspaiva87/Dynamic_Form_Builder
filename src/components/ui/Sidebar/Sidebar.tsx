@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react'
-import { Button } from './button'
-import { Input } from './input'
+import { Button } from '../button'
+import { Input } from '../input'
+import { NavMenu } from './nav-menu'
 
 export function SideBar() {
   return (
@@ -15,6 +16,7 @@ export function SideBar() {
             Novo
           </Button>
         </div>
+        <NavMenu />
       </section>
     </main>
   )
