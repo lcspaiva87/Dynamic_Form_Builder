@@ -4,7 +4,7 @@ import { Input } from './input'
 
 export function SideBar() {
   return (
-    <main className="border-l-2  border-b-red-300  bg-red-600 flex flex-col w-96 ">
+    <main className="    bg-white flex flex-col w-96 border-r-2 border-black/5 ">
       <section className="p-3 gap-7 flex flex-col">
         <h1 className="text-lg font-bold">Dynamic Form Builder</h1>
 
@@ -12,7 +12,7 @@ export function SideBar() {
           <Input placeholder="Search" />
           <Button className="flex gap-1 ">
             <Plus className="size-4" />
-            Cria um Novo
+            Novo
           </Button>
         </div>
       </section>
