@@ -5,7 +5,7 @@ import { NavMenu } from './nav-menu'
 
 export function SideBar() {
   return (
-    <main className="    bg-white flex flex-col w-96 border-r-2 border-black/5 ">
+    <main className="    bg-white flex flex-col w-96 border-r-2 border-black/5 h-dvh ">
       <section className="p-3 gap-7 flex flex-col">
         <h1 className="text-lg font-bold">Dynamic Form Builder</h1>
 
