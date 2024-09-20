@@ -1,4 +1,3 @@
-import { SideBar } from '@/components/ui/Sidebar/Sidebar'
 import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -19,8 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="w-calc(100dvw-80px) flex h-dvh flex-col lg:flex-row">
-          <SideBar />
+        <div className="w-full flex h-dvh flex-col ">
+          {/* <SideBar /> */}
           {children}
         </div>
       </body>
