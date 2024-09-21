@@ -1,16 +1,24 @@
-"use client"
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import Link from 'next/link';
-import { useState } from 'react';
-import FormPreview from './FormPreview';
+'use client'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useToast } from '@/hooks/use-toast'
+import Link from 'next/link'
+import { useState } from 'react'
+import FormPreview from './FormPreview'
 
 const FormBuilder = () => {
-  const [formFields, setFormFields] = useState<{ id: number; type: string; label: string; required: boolean; options: string[]; }[]>([]);
-  const [formName, setFormName] = useState('');
-  const [formTitle, setFormTitle] = useState('');
-  const [formLogo, setFormLogo] = useState('');
+  const [formFields, setFormFields] = useState<
+    {
+      id: number
+      type: string
+      label: string
+      required: boolean
+      options: string[]
+    }[]
+  >([])
+  const [formName, setFormName] = useState('')
+  const [formTitle, setFormTitle] = useState('')
+  const [formLogo, setFormLogo] = useState('')
   const { toast } = useToast()
   const addField = (type: string) => {
     const newField = {
@@ -19,46 +27,62 @@ const FormBuilder = () => {
       label: '',
       required: false,
       options: type === 'select' ? ['Option 1'] : [],
-    };
-    setFormFields([...formFields, newField]);
-  };
+    }
+    setFormFields([...formFields, newField])
+  }
 
-  const updateField = (id: number, updates: { label?: string; required?: boolean; }) => {
-    setFormFields(formFields.map(field =>
-      field.id === id ? { ...field, ...updates } : field
-    ));
-  };
+  const updateField = (
+    id: number,
+    updates: { label?: string; required?: boolean },
+  ) => {
+    setFormFields(
+      formFields.map((field) =>
+        field.id === id ? { ...field, ...updates } : field,
+      ),
+    )
+  }
 
   const removeField = (id: number) => {
-    setFormFields(formFields.filter(field => field.id !== id));
-  };
+    setFormFields(formFields.filter((field) => field.id !== id))
+  }
 
   const addOption = (fieldId: number) => {
-    setFormFields(formFields.map(field =>
-      field.id === fieldId
-        ? { ...field, options: [...field.options, `Option ${field.options.length + 1}`] }
-        : field
-    ));
-  };
+    setFormFields(
+      formFields.map((field) =>
+        field.id === fieldId
+          ? {
+              ...field,
+              options: [...field.options, `Option ${field.options.length + 1}`],
+            }
+          : field,
+      ),
+    )
+  }
 
   const updateOption = (fieldId: number, index: number, value: string) => {
-    setFormFields(formFields.map(field =>
-      field.id === fieldId
-        ? {
-          ...field,
-          options: field.options.map((option, i) => i === index ? value : option)
-        }
-        : field
-    ));
-  };
+    setFormFields(
+      formFields.map((field) =>
+        field.id === fieldId
+          ? {
+              ...field,
+              options: field.options.map((option, i) =>
+                i === index ? value : option,
+              ),
+            }
+          : field,
+      ),
+    )
+  }
 
   const removeOption = (fieldId: number, index: number) => {
-    setFormFields(formFields.map(field =>
-      field.id === fieldId
-        ? { ...field, options: field.options.filter((_, i) => i !== index) }
-        : field
-    ));
-  };
+    setFormFields(
+      formFields.map((field) =>
+        field.id === fieldId
+          ? { ...field, options: field.options.filter((_, i) => i !== index) }
+          : field,
+      ),
+    )
+  }
 
   const saveForm = async () => {
     try {
@@ -71,54 +95,56 @@ const FormBuilder = () => {
           name: formName,
           title: formTitle,
           logo: formLogo,
-          fields: formFields
+          fields: formFields,
         }),
-      });
+      })
       if (response.ok) {
         toast({
-          title: "Form saved",
-          description: "Your form has been saved successfully",
+          title: 'Form saved',
+          description: 'Your form has been saved successfully',
         })
       } else {
-        throw new Error('Failed to save form');
+        throw new Error('Failed to save form')
       }
     } catch (error) {
-      console.error('Error saving form:', error);
-      alert('Failed to save form. Please try again.');
+      console.error('Error saving form:', error)
+      alert('Failed to save form. Please try again.')
     }
-  };
-  const handleLogoUpload: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
-    const file = e.target.files?.[0];
+  }
+  const handleLogoUpload: React.ChangeEventHandler<HTMLInputElement> = async (
+    e,
+  ) => {
+    const file = e.target.files?.[0]
     if (file) {
       try {
-        const formData = new FormData();
-        formData.append('file', file);
+        const formData = new FormData()
+        formData.append('file', file)
 
         const response = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
-        });
+        })
 
         if (response.ok) {
-          const { fileUrl } = await response.json();
-          setFormLogo(fileUrl);
+          const { fileUrl } = await response.json()
+          setFormLogo(fileUrl)
           toast({
-            title: "Logo uploaded",
-            description: "Your logo has been uploaded successfully",
-          });
+            title: 'Logo uploaded',
+            description: 'Your logo has been uploaded successfully',
+          })
         } else {
-          throw new Error('Failed to upload logo');
+          throw new Error('Failed to upload logo')
         }
       } catch (error) {
-        console.error('Error uploading logo:', error);
+        console.error('Error uploading logo:', error)
         toast({
-          title: "Upload failed",
-          description: "Failed to upload logo. Please try again.",
-          variant: "destructive",
-        });
+          title: 'Upload failed',
+          description: 'Failed to upload logo. Please try again.',
+          variant: 'destructive',
+        })
       }
     }
-  };
+  }
   const fieldTypes = [
     { type: 'text', label: 'Texto' },
     { type: 'number', label: 'Número' },
@@ -129,15 +155,17 @@ const FormBuilder = () => {
     { type: 'cep', label: 'CEP' },
     { type: 'cpf', label: 'CPF' },
     { type: 'rg', label: 'RG' },
-    { type: 'phone', label: 'Telefone' }
-  ];
+    { type: 'phone', label: 'Telefone' },
+  ]
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 p-4 items-center">
-        <div className='flex items-center w-full justify-between mb-4'>
-
+        <div className="flex items-center w-full justify-between mb-4">
           <h2 className="text-2xl font-bold ">Form Builder</h2>
-          <Link href="/form" className="bg-blue-500 text-white p-2 mr-2 rounded">
+          <Link
+            href="/form"
+            className="bg-blue-500 text-white p-2 mr-2 rounded"
+          >
             Formulario registrado
           </Link>
         </div>
@@ -174,9 +202,8 @@ const FormBuilder = () => {
               Adicionar {field.label}
             </Button>
           ))}
-
         </div>
-        {formFields.map(field => (
+        {formFields.map((field) => (
           <div key={field.id} className="mb-4 p-4 border rounded">
             <input
               type="text"
@@ -189,7 +216,9 @@ const FormBuilder = () => {
               <input
                 type="radio"
                 checked={field.required}
-                onChange={(e) => updateField(field.id, { required: e.target.checked })}
+                onChange={(e) =>
+                  updateField(field.id, { required: e.target.checked })
+                }
                 className="mr-2"
               />
               <label>Required</label>
@@ -202,29 +231,54 @@ const FormBuilder = () => {
                     <input
                       type="text"
                       value={option}
-                      onChange={(e) => updateOption(field.id, index, e.target.value)}
+                      onChange={(e) =>
+                        updateOption(field.id, index, e.target.value)
+                      }
                       className="flex-grow p-2 mr-2 border rounded"
                     />
-                    <Button onClick={() => removeOption(field.id, index)} className="bg-red-500 text-white p-2 rounded">Remove</Button>
+                    <Button
+                      onClick={() => removeOption(field.id, index)}
+                      className="bg-red-500 text-white p-2 rounded"
+                    >
+                      Remove
+                    </Button>
                   </div>
                 ))}
-                <Button onClick={() => addOption(field.id)} className="bg-green-500 text-white p-2 rounded">Add Option</Button>
+                <Button
+                  onClick={() => addOption(field.id)}
+                  className="bg-green-500 text-white p-2 rounded"
+                >
+                  Add Option
+                </Button>
               </div>
             )}
-            <Button onClick={() => removeField(field.id)} className="bg-red-500 text-white p-2 mt-2 rounded">Remove Field</Button>
+            <Button
+              onClick={() => removeField(field.id)}
+              className="bg-red-500 text-white p-2 mt-2 rounded"
+            >
+              Remove Field
+            </Button>
           </div>
         ))}
-        <Button disabled={
-          !formFields.length ||
-          !formName ||
-          !formTitle
-        } onClick={saveForm} className="bg-green-500 text-white p-2 rounded">Save Form</Button>
+        <Button
+          disabled={!formFields.length || !formName || !formTitle}
+          onClick={saveForm}
+          className="bg-green-500 text-white p-2 rounded"
+        >
+          Save Form
+        </Button>
       </div>
       <div className="w-full md:w-1/2 p-4">
-        <FormPreview fields={formFields} title={formTitle} logo={formLogo} name={formName} id={''} />
+        <FormPreview
+          fields={formFields}
+          title={formTitle}
+          logo={formLogo}
+          name={formName}
+          id={''}
+        />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FormBuilder;
+export default FormBuilder

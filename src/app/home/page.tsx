@@ -2,32 +2,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { Input } from '@/components/ui/input'
-import {
-  Bell,
-  Calendar,
-  ChevronDown,
-  ChevronRight,
-  Download,
-  FileText,
-  Grid,
-  Home,
-  Search,
-  Settings,
-  Shield,
-  Star,
-} from 'lucide-react'
+import { links } from '@/settings/nav-menu'
+import { Bell, ChevronDown, ChevronRight, Search, Settings } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Dashboard() {
-  const sidebarIcons = [
-    { icon: Home, label: 'Home' },
-    { icon: Star, label: 'Favorites' },
-    { icon: Grid, label: 'Dashboard' },
-    { icon: Shield, label: 'Security' },
-    { icon: Calendar, label: 'Calendar' },
-    { icon: FileText, label: 'Documents' },
-    { icon: Download, label: 'Downloads' },
-  ]
-
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -40,10 +19,10 @@ export default function Dashboard() {
             />
           </svg>
         </Button>
-        {sidebarIcons.map((item, index) => (
-          <Button key={index} variant="ghost" className="mb-2 p-3">
+        {links.map((item, index) => (
+          <Link key={index} href={item.href} className="mb-2 p-3">
             <item.icon className="w-6 h-6 text-gray-600" />
-          </Button>
+          </Link>
         ))}
         <Button variant="ghost" className="mt-auto p-3">
           <Settings className="w-6 h-6 text-gray-600" />

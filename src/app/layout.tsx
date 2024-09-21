@@ -1,7 +1,10 @@
 import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { PrimeReactProvider } from 'primereact/api'
 import './globals.css'
+
+import 'primereact/resources/themes/lara-light-cyan/theme.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,8 +22,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="w-full flex h-dvh flex-col ">
-          {/* <SideBar /> */}
-          {children}
+          <PrimeReactProvider value={{ unstyled: true }}>
+            {/* <SideBar /> */}
+            {children}
+          </PrimeReactProvider>
         </div>
       </body>
       <Toaster />
