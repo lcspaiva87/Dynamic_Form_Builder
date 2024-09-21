@@ -1,8 +1,11 @@
-import { SideBar } from '@/components/ui/Sidebar-'
 import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+
+import { Sidebar } from '@/components/sidebar'
+import { Providers } from '@/provider'
+import 'primereact/resources/themes/lara-light-cyan/theme.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="w-calc(100dvw-80px) flex h-dvh flex-col lg:flex-row">
-          <SideBar />
-          {children}
+        <div className="w-full flex h-dvh  ">
+          <Sidebar />
+          <Providers>{children}</Providers>
         </div>
       </body>
       <Toaster />

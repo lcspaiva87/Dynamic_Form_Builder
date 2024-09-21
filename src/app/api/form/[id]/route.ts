@@ -1,10 +1,10 @@
-import prisma from "@/lib/prisma"
-import { NextRequest, NextResponse } from "next/server"
+import prisma from '@/lib/prisma'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },) {
-   console.log("id",params.id)
+  { params }: { params: { id: string } },
+) {
   try {
     const idForm = params.id
     if (!idForm) {
@@ -12,8 +12,8 @@ export async function GET(
     }
     const forms = await prisma.form.findMany({
       where: {
-        id: idForm
-      }
+        id: idForm,
+      },
     })
 
     return NextResponse.json(forms)
@@ -21,5 +21,4 @@ export async function GET(
     console.error('Error fetching forms:', error)
     return NextResponse.json({ message: 'Failed to fetch forms' })
   }
-
 }

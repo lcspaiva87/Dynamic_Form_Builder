@@ -1,12 +1,35 @@
-'use client'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { IFormType } from '@/app/@types/forms'
+import FormPreview from '@/app/FormPreview'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useUpdateForm } from '@/hooks/query/form/update-data'
 import { useToast } from '@/hooks/use-toast'
+import { Form } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'
-import FormPreview from './FormPreview'
+const fieldTypes = [
+  { type: 'text', label: 'Texto' },
+  { type: 'number', label: 'Número' },
+  { type: 'email', label: 'E-mail' },
+  { type: 'select', label: 'Seleção' },
+  { type: 'textarea', label: 'Área de Texto' },
+  { type: 'radio', label: 'Múltipla Escolha' },
+  { type: 'cep', label: 'CEP' },
+  { type: 'cpf', label: 'CPF' },
+  { type: 'rg', label: 'RG' },
+  { type: 'phone', label: 'Telefone' },
+]
+interface Field {
+  itemForm: Form | []
+}
 
-const FormBuilder = () => {
+export function EditPage({ itemForm }: Field) {
+  function isFormType(item: any): item is IFormType {
+    return item && typeof item === 'object' && 'fields' in item
+  }
+
   const [formFields, setFormFields] = useState<
     {
       id: number
@@ -15,10 +38,28 @@ const FormBuilder = () => {
       required: boolean
       options: string[]
     }[]
-  >([])
-  const [formName, setFormName] = useState('')
-  const [formTitle, setFormTitle] = useState('')
-  const [formLogo, setFormLogo] = useState('')
+  >(() => {
+    if (isFormType(itemForm) && Array.isArray(itemForm.fields)) {
+      return itemForm.fields.map((field: any) => ({
+        id: field.id || Date.now(),
+        type: field.type || '',
+        label: field.label || '',
+        required: field.required || false,
+        options: Array.isArray(field.options) ? field.options : [],
+      }))
+    }
+    return []
+  })
+  const { mutate: updateForm } = useUpdateForm()
+  const [formName, setFormName] = useState<string>(
+    itemForm && 'name' in itemForm ? itemForm.name : '',
+  )
+  const [formTitle, setFormTitle] = useState<string>(
+    itemForm && 'title' in itemForm ? itemForm.title : '',
+  )
+  const [formLogo, setFormLogo] = useState<string | null>(
+    itemForm && 'logo' in itemForm ? itemForm.logo : null,
+  )
   const { toast } = useToast()
   const addField = (type: string) => {
     const newField = {
@@ -29,87 +70,6 @@ const FormBuilder = () => {
       options: type === 'select' ? ['Option 1'] : [],
     }
     setFormFields([...formFields, newField])
-  }
-
-  const updateField = (
-    id: number,
-    updates: { label?: string; required?: boolean },
-  ) => {
-    setFormFields(
-      formFields.map((field) =>
-        field.id === id ? { ...field, ...updates } : field,
-      ),
-    )
-  }
-
-  const removeField = (id: number) => {
-    setFormFields(formFields.filter((field) => field.id !== id))
-  }
-
-  const addOption = (fieldId: number) => {
-    setFormFields(
-      formFields.map((field) =>
-        field.id === fieldId
-          ? {
-              ...field,
-              options: [...field.options, `Option ${field.options.length + 1}`],
-            }
-          : field,
-      ),
-    )
-  }
-
-  const updateOption = (fieldId: number, index: number, value: string) => {
-    setFormFields(
-      formFields.map((field) =>
-        field.id === fieldId
-          ? {
-              ...field,
-              options: field.options.map((option, i) =>
-                i === index ? value : option,
-              ),
-            }
-          : field,
-      ),
-    )
-  }
-
-  const removeOption = (fieldId: number, index: number) => {
-    setFormFields(
-      formFields.map((field) =>
-        field.id === fieldId
-          ? { ...field, options: field.options.filter((_, i) => i !== index) }
-          : field,
-      ),
-    )
-  }
-
-  const saveForm = async () => {
-    try {
-      const response = await fetch('/api/form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formName,
-          title: formTitle,
-          logo: formLogo,
-          fields: formFields,
-        }),
-      })
-      if (response.ok) {
-        toast({
-          title: 'Form saved',
-          description: 'Your form has been saved successfully',
-        })
-      } else {
-        throw new Error('Failed to save form')
-      }
-    } catch (error) {
-      console.error('Error saving form:', error)
-      alert('Failed to save form. Please try again.')
-    }
   }
   const handleLogoUpload: React.ChangeEventHandler<HTMLInputElement> = async (
     e,
@@ -145,18 +105,88 @@ const FormBuilder = () => {
       }
     }
   }
-  const fieldTypes = [
-    { type: 'text', label: 'Texto' },
-    { type: 'number', label: 'Número' },
-    { type: 'email', label: 'E-mail' },
-    { type: 'select', label: 'Seleção' },
-    { type: 'textarea', label: 'Área de Texto' },
-    { type: 'radio', label: 'Múltipla Escolha' },
-    { type: 'cep', label: 'CEP' },
-    { type: 'cpf', label: 'CPF' },
-    { type: 'rg', label: 'RG' },
-    { type: 'phone', label: 'Telefone' },
-  ]
+
+  const updateField = (
+    id: number,
+    updates: { label?: string; required?: boolean },
+  ) => {
+    setFormFields(
+      formFields.map((field) =>
+        field.id === id ? { ...field, ...updates } : field,
+      ),
+    )
+  }
+  const removeField = (id: number) => {
+    setFormFields(formFields.filter((field) => field.id !== id))
+  }
+
+  const addOption = (fieldId: number) => {
+    setFormFields(
+      formFields.map((field) =>
+        field.id === fieldId
+          ? {
+              ...field,
+              options: [...field.options, `Option ${field.options.length + 1}`],
+            }
+          : field,
+      ),
+    )
+  }
+
+  const updateOption = (fieldId: number, index: number, value: string) => {
+    setFormFields(
+      formFields.map((field) =>
+        field.id === fieldId
+          ? {
+              ...field,
+              options: field.options.map((option, i) =>
+                i === index ? value : option,
+              ),
+            }
+          : field,
+      ),
+    )
+  }
+  const removeOption = (fieldId: number, index: number) => {
+    setFormFields(
+      formFields.map((field) =>
+        field.id === fieldId
+          ? { ...field, options: field.options.filter((_, i) => i !== index) }
+          : field,
+      ),
+    )
+  }
+  const handleUpdateForm = async () => {
+    const id = itemForm && 'id' in itemForm ? itemForm.id : ''
+    try {
+      updateForm({
+        id,
+        data: {
+          name: formName,
+          title: formTitle,
+          logo: formLogo ?? undefined,
+          // @ts-ignore
+          fields: formFields.map((field) => ({
+            id: field.id,
+            type: field.type,
+            label: field.label,
+            required: field.required,
+            options: field.options,
+          })),
+        },
+      })
+      toast({
+        title: 'Form updated',
+        description: 'Your form has been updated successfully',
+      })
+    } catch (error) {
+      toast({
+        title: 'Update failed',
+        description: 'Failed to update form. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 p-4 items-center">
@@ -262,7 +292,7 @@ const FormBuilder = () => {
         ))}
         <Button
           disabled={!formFields.length || !formName || !formTitle}
-          onClick={saveForm}
+          onClick={handleUpdateForm}
           className="bg-green-500 text-white p-2 rounded"
         >
           Save Form
@@ -272,7 +302,7 @@ const FormBuilder = () => {
         <FormPreview
           fields={formFields}
           title={formTitle}
-          logo={formLogo}
+          logo={formLogo || ''}
           name={formName}
           id={''}
         />
@@ -280,5 +310,3 @@ const FormBuilder = () => {
     </div>
   )
 }
-
-export default FormBuilder
