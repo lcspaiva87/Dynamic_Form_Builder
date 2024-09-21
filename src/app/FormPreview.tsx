@@ -175,9 +175,11 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
               case 'email':
                 return (
                   <div key={field.id}>
-                    <label className="block mb-1">
+                    <label className=" mb-1 flex gap-2 items-center">
                       {field.label}
-                      {field.required && '*'}
+                      <span className="text-red-400">
+                        {field.required && '*'}
+                      </span>
                     </label>
                     <input
                       type={field.type}
@@ -297,7 +299,9 @@ const FormPreview = ({ fields, title, logo, name, id }: FormPreviewProps) => {
                   <div key={field.id}>
                     <label className="block mb-1">
                       {field.label}
-                      {field.required && '*'}
+                      <span className="text-red-400">
+                        {field.required && '*'}
+                      </span>
                     </label>
                     <select
                       className="w-full p-2 border rounded"
