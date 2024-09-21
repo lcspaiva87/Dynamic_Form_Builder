@@ -7,11 +7,7 @@ import { ChevronRight } from 'lucide-react'
 export default function Dashboard() {
   return (
     <div className="flex h-screen bg-gray-100 w-full">
-      {/* Sidebar */}
-
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
         <Header />
 
         {/* Dashboard Content */}

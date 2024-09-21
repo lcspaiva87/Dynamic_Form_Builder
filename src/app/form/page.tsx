@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 import { useEffect, useState } from 'react'
 import { tv } from 'tailwind-variants'
+import { MenuForms } from './_components/Menu'
 export default function FormsList() {
   const [forms, setForms] = useState<Form[]>([])
   const [loading, setLoading] = useState(true)
@@ -60,8 +61,9 @@ export default function FormsList() {
               <Link
                 href={`/form/${form.id}`}
                 key={form.id}
-                className="block  border rounded-lg hover:shadow-lg transition-shadow"
+                className="block relative  border rounded-lg hover:shadow-lg transition-shadow"
               >
+                <MenuForms />
                 <img
                   src={form?.logo ? form.logo : '/logo.png'}
                   alt={form.title}
