@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import { PrimeReactProvider } from 'primereact/api'
 import './globals.css'
 
+import { Sidebar } from '@/components/sidebar'
 import 'primereact/resources/themes/lara-light-cyan/theme.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -21,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="w-full flex h-dvh flex-col ">
+        <div className="w-full flex h-dvh  ">
           <PrimeReactProvider value={{ unstyled: true }}>
-            {/* <SideBar /> */}
+            <Sidebar />
             {children}
           </PrimeReactProvider>
         </div>

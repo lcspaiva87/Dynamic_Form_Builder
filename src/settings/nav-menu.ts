@@ -4,7 +4,6 @@ import {
   FileText,
   Grid,
   Home,
-  HomeIcon,
   LayoutDashboard,
   Shield,
   Star,
@@ -16,20 +15,16 @@ interface NavLink {
 }
 export const links: NavLink[] = [
   {
-    icon: HomeIcon,
+    icon: Home,
     name: 'Inicio',
-    href: '#',
+    href: '/home',
   },
   {
     icon: LayoutDashboard,
     name: 'Dashboard',
     href: '/form',
   },
-  {
-    icon: Home,
-    name: 'Home',
-    href: '',
-  },
+
   {
     icon: Star,
     name: 'Favorites',

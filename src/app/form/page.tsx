@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import { Header } from '@/components/header'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Form } from '@prisma/client'
@@ -42,57 +43,62 @@ export default function FormsList() {
     return transLation[status] || status
   }
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Formulários Cadastrados</h1>
-      {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-[125px] w-full rounded-xl" />
-          ))}
-        </div>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 ">
-        {forms?.map((form: Form) => (
-          <Link
-            href={`/form/${form.id}`}
-            key={form.id}
-            className="block  border rounded-lg hover:shadow-lg transition-shadow"
-          >
-            <img
-              src={form?.logo ? form.logo : '/logo.png'}
-              alt={form.title}
-              className="w-full h-32 object-cover rounded-lg mb-4"
-            />
-            <div className="p-2 flex items-center space-x-3 justify-between">
-              <h2 className="text-xl flex-1 min-w-0 truncate font-semibold  ">
-                {form.title}
-              </h2>
-              <Badge
-                className={badgeVariant({
-                  status: ['success', 'danger', 'warning'].includes(
-                    form.status as string,
-                  )
-                    ? (form.status as 'success' | 'danger' | 'warning')
-                    : undefined,
-                })}
+    <div className="flex h-screen bg-gray-100 w-full">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+          <h1 className="text-3xl font-bold mb-6">Formulários Cadastrados</h1>
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="h-[125px] w-full rounded-xl" />
+              ))}
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 ">
+            {forms?.map((form: Form) => (
+              <Link
+                href={`/form/${form.id}`}
+                key={form.id}
+                className="block  border rounded-lg hover:shadow-lg transition-shadow"
               >
-                {translateStatus(form.status)}
-              </Badge>
-            </div>
-            <div className="p-2 flex items-center justify-between ">
-              <h1 className="text-gray-600 text-xl flex-1 min-w-0 truncate">
-                {form.name}
-              </h1>
-              <span>
-                {new Date(form.updatedAt).toLocaleDateString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                })}
-              </span>{' '}
-            </div>
-          </Link>
-        ))}
+                <img
+                  src={form?.logo ? form.logo : '/logo.png'}
+                  alt={form.title}
+                  className="w-full h-32 object-cover rounded-lg mb-4"
+                />
+                <div className="p-2 flex items-center space-x-3 justify-between">
+                  <h2 className="text-xl flex-1 min-w-0 truncate font-semibold  ">
+                    {form.title}
+                  </h2>
+                  <Badge
+                    className={badgeVariant({
+                      status: ['success', 'danger', 'warning'].includes(
+                        form.status as string,
+                      )
+                        ? (form.status as 'success' | 'danger' | 'warning')
+                        : undefined,
+                    })}
+                  >
+                    {translateStatus(form.status)}
+                  </Badge>
+                </div>
+                <div className="p-2 flex items-center justify-between ">
+                  <h1 className="text-gray-600 text-sm flex-1 min-w-0 truncate">
+                    {form.name}
+                  </h1>
+                  <span className="text-xs">
+                    {new Date(form.updatedAt).toLocaleDateString('pt-BR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                    })}
+                  </span>{' '}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </main>
       </div>
     </div>
   )
