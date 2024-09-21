@@ -1,3 +1,4 @@
+import { IFormType } from '@/app/@types/forms'
 import { patch } from '@/data/client/htpp-client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 const updateDataFormData = async (
@@ -7,7 +8,7 @@ const updateDataFormData = async (
     title: string
     logo: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fields: any[]
+    fields: IFormType[]
     status: string
   }>,
 ) => {
@@ -28,8 +29,7 @@ export const useUpdateForm = () => {
         name: string
         title: string
         logo: string
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fields: any[]
+        fields: IFormType[]
         status: string
       }>
     }) => updateDataFormData(id, data), // Chama a função de atualização

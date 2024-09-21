@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { IFormType } from '@/app/@types/forms'
 import FormPreview from '@/app/FormPreview'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useUpdateForm } from '@/hooks/query/form/update-data'
 import { useToast } from '@/hooks/use-toast'
-import { Form, Status } from '@prisma/client'
-import { JsonValue } from '@prisma/client/runtime/library'
+import { Form } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'
 const fieldTypes = [
@@ -22,18 +24,9 @@ const fieldTypes = [
 interface Field {
   itemForm: Form | []
 }
-interface FormType {
-  id: string
-  name: string
-  title: string
-  logo: string | null
-  fields: JsonValue
-  createdAt: Date
-  updatedAt: Date
-  status: Status
-}
+
 export function EditPage({ itemForm }: Field) {
-  function isFormType(item: any): item is FormType {
+  function isFormType(item: any): item is IFormType {
     return item && typeof item === 'object' && 'fields' in item
   }
 
@@ -57,7 +50,7 @@ export function EditPage({ itemForm }: Field) {
     }
     return []
   })
-
+  const { mutate: updateForm } = useUpdateForm()
   const [formName, setFormName] = useState<string>(
     itemForm && 'name' in itemForm ? itemForm.name : '',
   )
@@ -163,7 +156,37 @@ export function EditPage({ itemForm }: Field) {
       ),
     )
   }
-
+  const handleUpdateForm = async () => {
+    const id = itemForm && 'id' in itemForm ? itemForm.id : ''
+    try {
+      updateForm({
+        id,
+        data: {
+          name: formName,
+          title: formTitle,
+          logo: formLogo ?? undefined,
+          // @ts-ignore
+          fields: formFields.map((field) => ({
+            id: field.id,
+            type: field.type,
+            label: field.label,
+            required: field.required,
+            options: field.options,
+          })),
+        },
+      })
+      toast({
+        title: 'Form updated',
+        description: 'Your form has been updated successfully',
+      })
+    } catch (error) {
+      toast({
+        title: 'Update failed',
+        description: 'Failed to update form. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  }
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 p-4 items-center">
@@ -269,7 +292,7 @@ export function EditPage({ itemForm }: Field) {
         ))}
         <Button
           disabled={!formFields.length || !formName || !formTitle}
-          // onClick={saveForm}
+          onClick={handleUpdateForm}
           className="bg-green-500 text-white p-2 rounded"
         >
           Save Form
