@@ -1,6 +1,13 @@
 {
   "extends": [
-    "@rocketseat/eslint-config/next", 
+    "@rocketseat/eslint-config/next",
     "next/core-web-vitals"
-  ]
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "prettier/prettier": "off",
+    "camelcase": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "spaced-comment": "off"
+  }
 }
