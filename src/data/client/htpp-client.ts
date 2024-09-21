@@ -7,7 +7,7 @@ invariant(
 )
 
 async function request(
-  method: 'get' | 'post' | 'put' | 'delete',
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch',
   path: string,
   data?: unknown,
   token?: string,
@@ -47,8 +47,8 @@ export async function post(path: string, data: unknown, token?: string) {
   return request('post', path, data, token)
 }
 
-export async function put(path: string, data: unknown, token?: string) {
-  return request('put', path, data, token)
+export async function patch(path: string, data: unknown, token?: string) {
+  return request('patch', path, data, token)
 }
 
 export async function del(path: string, data: unknown, token?: string) {

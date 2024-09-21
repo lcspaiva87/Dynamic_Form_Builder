@@ -1,3 +1,4 @@
+'use client'
 import { REACT_QUERY_STALE_TIME } from '@/constants/general'
 import { get } from '@/data/client/htpp-client'
 import { useQuery } from '@tanstack/react-query'

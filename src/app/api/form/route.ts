@@ -60,3 +60,26 @@ export async function DELETE(request: Request) {
     )
   }
 }
+export async function PATCH(request: Request) {
+  try {
+    const { id, ...data } = await request.json()
+
+    const updatedForm = await prisma.form.update({
+      where: {
+        id,
+      },
+      data,
+    })
+
+    return NextResponse.json({
+      message: 'Form updated successfully',
+      data: updatedForm,
+    })
+  } catch (error) {
+    console.error('Error updating form:', error)
+    return NextResponse.json(
+      { message: 'Failed to update form' },
+      { status: 500 },
+    )
+  }
+}
