@@ -13,9 +13,11 @@ import { EllipsisIcon } from 'lucide-react'
 
 type Checked = DropdownMenuCheckboxItemProps['checked']
 
-export function MenuForms() {
+interface menuFormsProps {
+  handleDelete: () => void
+}
+export function MenuForms({ handleDelete }: menuFormsProps) {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
 
   return (
@@ -31,9 +33,10 @@ export function MenuForms() {
           Ver
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
-          checked={showActivityBar}
-          onCheckedChange={setShowActivityBar}
-          disabled
+          onClick={(e) => {
+            e.preventDefault()
+            handleDelete()
+          }}
         >
           Excluir
         </DropdownMenuCheckboxItem>
