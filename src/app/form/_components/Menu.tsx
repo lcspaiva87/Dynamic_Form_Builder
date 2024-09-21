@@ -15,10 +15,11 @@ type Checked = DropdownMenuCheckboxItemProps['checked']
 
 interface menuFormsProps {
   handleDelete: () => void
+  hadnleEdit: () => void
 }
-export function MenuForms({ handleDelete }: menuFormsProps) {
+export function MenuForms({ handleDelete, hadnleEdit }: menuFormsProps) {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-  const [showPanel, setShowPanel] = React.useState<Checked>(false)
+  const [showPanel, setShowPanel] = React.useState(false)
 
   return (
     <DropdownMenu>
@@ -43,6 +44,10 @@ export function MenuForms({ handleDelete }: menuFormsProps) {
         <DropdownMenuCheckboxItem
           checked={showPanel}
           onCheckedChange={setShowPanel}
+          onClick={(e) => {
+            e.stopPropagation()
+            hadnleEdit()
+          }}
         >
           Editar
         </DropdownMenuCheckboxItem>
