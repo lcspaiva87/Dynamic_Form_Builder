@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IFormType } from '@/app/@types/forms'
 import FormPreview from '@/app/FormPreview'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useUpdateForm } from '@/hooks/query/form/update-data'
 import { useToast } from '@/hooks/use-toast'
+import { IFormType } from '@/types/forms'
 import { Form } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'

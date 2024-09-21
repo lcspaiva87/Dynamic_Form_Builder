@@ -1,5 +1,6 @@
-import { IFormType } from '@/app/@types/forms'
+
 import { patch } from '@/data/client/htpp-client'
+import { IFormType } from '@/types/forms'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 const updateDataFormData = async (
   id: string,
