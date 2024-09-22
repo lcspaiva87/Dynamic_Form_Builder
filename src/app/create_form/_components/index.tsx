@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { GripVertical } from 'lucide-react'
+import { GripVertical, Plus, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
@@ -25,7 +25,14 @@ interface Step {
   fields: Field[]
 }
 
-const FieldComponent: React.FC<{ field: Field; index: number }> = ({ field, index }) => {
+const FieldComponent: React.FC<{ 
+  field: Field; 
+  index: number; 
+  onRemove: () => void;
+  onUpdateOptions: (options: string[]) => void;
+}> = ({ field, index, onRemove, onUpdateOptions }) => {
+  const [newOption, setNewOption] = useState<string>('')
+
   const getFieldComponent = () => {
     switch (field.type) {
       case 'text':
@@ -36,16 +43,50 @@ const FieldComponent: React.FC<{ field: Field; index: number }> = ({ field, inde
         return <Textarea id={field.id} placeholder={`Enter ${field.label}`} />
       case 'select':
         return (
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder={`Select ${field.label}`} />
-            </SelectTrigger>
-            <SelectContent>
-              {field.options?.map((option, i) => (
-                <SelectItem key={i} value={option}>{option}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder={`Select ${field.label}`} />
+              </SelectTrigger>
+              <SelectContent>
+                {field.options?.map((option, i) => (
+                  <SelectItem key={i} value={option}>{option}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="mt-2">
+              <Input
+                type="text"
+                value={newOption}
+                onChange={(e) => setNewOption(e.target.value)}
+                placeholder="New option"
+              />
+              <Button 
+                onClick={() => {
+                  if (newOption) {
+                    onUpdateOptions([...(field.options || []), newOption])
+                    setNewOption('')
+                  }
+                }}
+                className="mt-1"
+              >
+                <Plus size={16} className="mr-1" /> Add Option
+              </Button>
+            </div>
+            {field.options?.map((option, index) => (
+              <div key={index} className="flex items-center mt-1">
+                <span>{option}</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => onUpdateOptions(field.options?.filter((_, i) => i !== index) || [])}
+                  className="ml-2"
+                >
+                  <X size={16} />
+                </Button>
+              </div>
+            ))}
+          </div>
         )
       default:
         return null
@@ -60,11 +101,16 @@ const FieldComponent: React.FC<{ field: Field; index: number }> = ({ field, inde
           {...provided.draggableProps}
           className="mb-4 p-2 bg-white rounded shadow"
         >
-          <div className="flex items-center mb-2">
-            <div {...provided.dragHandleProps} className="mr-2">
-              <GripVertical size={20} />
+          <div className="flex items-center mb-2 justify-between">
+            <div className="flex items-center">
+              <div {...provided.dragHandleProps} className="mr-2">
+                <GripVertical size={20} />
+              </div>
+              <Label htmlFor={field.id}>{field.label}</Label>
             </div>
-            <Label htmlFor={field.id}>{field.label}</Label>
+            <Button variant="ghost" size="icon" onClick={onRemove}>
+              <X size={20} />
+            </Button>
           </div>
           {getFieldComponent()}
         </div>
@@ -85,7 +131,7 @@ export default function DynamicFormBuilder() {
     if (newField.label && activeStep) {
       setSteps(steps.map(step => 
         step.id === activeStep 
-          ? { ...step, fields: [...step.fields, { ...newField, id: `field-${Date.now()}` }] }
+          ? { ...step, fields: [...step.fields, { ...newField, id: `field-${Date.now()}`, options: newField.type === 'select' ? [] : undefined }] }
           : step
       ))
       setNewField({ id: '', type: 'text', label: '' })
@@ -103,6 +149,36 @@ export default function DynamicFormBuilder() {
       setNewStepTitle('')
       setActiveStep(newStep.id)
     }
+  }
+
+  const removeStep = (stepId: string) => {
+    setSteps(steps.filter(step => step.id !== stepId))
+    if (activeStep === stepId) {
+      setActiveStep(steps[0]?.id || null)
+    }
+  }
+
+  const removeField = (stepId: string, fieldId: string) => {
+    setSteps(steps.map(step => 
+      step.id === stepId 
+        ? { ...step, fields: step.fields.filter(field => field.id !== fieldId) }
+        : step
+    ))
+  }
+
+  const updateFieldOptions = (stepId: string, fieldId: string, newOptions: string[]) => {
+    setSteps(steps.map(step => 
+      step.id === stepId 
+        ? { 
+            ...step, 
+            fields: step.fields.map(field => 
+              field.id === fieldId 
+                ? { ...field, options: newOptions }
+                : field
+            )
+          }
+        : step
+    ))
   }
 
   const onDragEnd = (result: any) => {
@@ -136,7 +212,7 @@ export default function DynamicFormBuilder() {
   }
 
   return (
-    <div className="container  ">
+    <div className="">
       <div className="grid grid-cols-2 gap-4">
         <Card>
           <CardHeader>
@@ -202,13 +278,18 @@ export default function DynamicFormBuilder() {
             <div className="space-y-4">
               {steps.map((step, index) => (
                 <div key={step.id} className="border p-4 rounded">
-                  <Button
-                    variant={activeStep === step.id ? "default" : "outline"}
-                    className="w-full justify-start mb-2"
-                    onClick={() => setActiveStep(step.id)}
-                  >
-                    {step.title}
-                  </Button>
+                  <div className="flex justify-between items-center mb-2">
+                    <Button
+                      variant={activeStep === step.id ? "default" : "outline"}
+                      className="w-full justify-start"
+                      onClick={() => setActiveStep(step.id)}
+                    >
+                      {step.title}
+                    </Button>
+                    <Button variant="destructive" size="icon" onClick={() => removeStep(step.id)}>
+                      <X size={20} />
+                    </Button>
+                  </div>
                   <Droppable droppableId={step.id}>
                     {(provided) => (
                       <div 
@@ -217,7 +298,13 @@ export default function DynamicFormBuilder() {
                         className="space-y-2 p-2 bg-gray-100 rounded min-h-[50px]"
                       >
                         {step.fields.map((field, fieldIndex) => (
-                          <FieldComponent key={field.id} field={field} index={fieldIndex} />
+                          <FieldComponent 
+                            key={field.id} 
+                            field={field} 
+                            index={fieldIndex} 
+                            onRemove={() => removeField(step.id, field.id)}
+                            onUpdateOptions={(newOptions) => updateFieldOptions(step.id, field.id, newOptions)}
+                          />
                         ))}
                         {provided.placeholder}
                       </div>
