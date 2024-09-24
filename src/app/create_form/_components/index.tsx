@@ -216,12 +216,12 @@ export default function DynamicFormBuilder() {
       <div className="grid grid-cols-2 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Add New Step</CardTitle>
+            <CardTitle>Adicionar um novo Step </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="stepTitle">Step Title</Label>
+                <Label htmlFor="stepTitle">Titulo do Step</Label>
                 <Input
                   id="stepTitle"
                   value={newStepTitle}
@@ -229,13 +229,13 @@ export default function DynamicFormBuilder() {
                   placeholder="Enter step title"
                 />
               </div>
-              <Button onClick={addStep}>Add Step</Button>
+              <Button onClick={addStep}>Adicionar o Step</Button>
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Add New Field to {steps.find(s => s.id === activeStep)?.title || 'Step'}</CardTitle>
+            <CardTitle>Adicionar novo campo a {steps.find(s => s.id === activeStep)?.title || 'Step'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -256,7 +256,7 @@ export default function DynamicFormBuilder() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="fieldLabel">Field Label</Label>
+                <Label htmlFor="fieldLabel">Tipo do campo</Label>
                 <Input
                   id="fieldLabel"
                   value={newField.label}
@@ -264,14 +264,14 @@ export default function DynamicFormBuilder() {
                   placeholder="Enter field label"
                 />
               </div>
-              <Button onClick={addField} disabled={!activeStep}>Add Field</Button>
+              <Button onClick={addField} disabled={!activeStep}>Adicionar campo</Button>
             </div>
           </CardContent>
         </Card>
       </div>
       <Card className="mt-4">
         <CardHeader>
-          <CardTitle>Form Preview</CardTitle>
+          <CardTitle>Pré-visualização do formulário</CardTitle>
         </CardHeader>
         <CardContent>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -279,17 +279,18 @@ export default function DynamicFormBuilder() {
               {steps.map((step, index) => (
                 <div key={step.id} className="border p-4 rounded">
                   <div className="flex justify-between items-center mb-2">
-                    <Button
-                      variant={activeStep === step.id ? "default" : "outline"}
-                      className="w-full justify-start"
+                    <div
+                  
+                      className="w-full  flex items-center justify-between bg-primary text-white p-2 rounded"
                       onClick={() => setActiveStep(step.id)}
                     >
                       {step.title}
-                    </Button>
-                    <Button variant="destructive" size="icon" onClick={() => removeStep(step.id)}>
+                    <Button  size="icon" className="bg-transparent hover:text-white/10 hover:bg-transparent" onClick={() => removeStep(step.id)}>
                       <X size={20} />
                     </Button>
+                    </div>
                   </div>
+               
                   <Droppable droppableId={step.id}>
                     {(provided) => (
                       <div 
