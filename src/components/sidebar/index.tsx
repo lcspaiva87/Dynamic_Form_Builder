@@ -5,7 +5,7 @@ import { Button } from '../ui/button'
 
 export function Sidebar() {
   return (
-    <aside className="w-16 bg-white shadow-md flex flex-col items-center py-4">
+    <aside className="w-16  flex flex-col items-center py-4">
       <Button variant="ghost" className="mb-6">
         <svg viewBox="0 0 24 24" className="w-6 h-6 text-gray-600">
           <path

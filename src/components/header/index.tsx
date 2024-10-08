@@ -4,7 +4,7 @@ import { Input } from '../ui/input'
 
 export function Header() {
   return (
-    <header className="bg-white shadow-sm">
+    <header >
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-semibold">SaaS Dashboard</h1>

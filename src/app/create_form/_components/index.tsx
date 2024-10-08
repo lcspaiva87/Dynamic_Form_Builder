@@ -10,13 +10,14 @@ import { GripVertical, Plus, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
-type FieldType = 'text' | 'number' | 'email' | 'textarea' | 'select'
+type FieldType = 'text' | 'number' | 'email' | 'textarea' | 'select' | 'radio' | 'cep' | 'cpf' | 'rg' | 'phone';
 
 interface Field {
   id: string
   type: FieldType
   label: string
   options?: string[] // for select fields
+  required: boolean
 }
 
 interface Step {
@@ -32,7 +33,7 @@ const FieldComponent: React.FC<{
   onUpdateOptions: (options: string[]) => void;
 }> = ({ field, index, onRemove, onUpdateOptions }) => {
   const [newOption, setNewOption] = useState<string>('')
-
+  console.log('field', field)
   const getFieldComponent = () => {
     switch (field.type) {
       case 'text':
@@ -119,12 +120,24 @@ const FieldComponent: React.FC<{
   )
 }
 
-const fieldTypes: FieldType[] = ['text', 'number', 'email', 'textarea', 'select']
+const fieldTypes: FieldType[] =  [
+  'text',
+  'number',
+  'email',
+  'select',
+  'textarea',
+  'radio',
+  'cep',
+  'cpf',
+  'rg',
+  'phone',
+];
+
 
 export default function DynamicFormBuilder() {
   const [steps, setSteps] = useState<Step[]>([])
   const [activeStep, setActiveStep] = useState<string | null>(null)
-  const [newField, setNewField] = useState<Field>({ id: '', type: 'text', label: '' })
+  const [newField, setNewField] = useState<Field>({ id: '', type: 'text', label: '', required: false })
   const [newStepTitle, setNewStepTitle] = useState<string>('')
 
   const addField = () => {
@@ -134,7 +147,7 @@ export default function DynamicFormBuilder() {
           ? { ...step, fields: [...step.fields, { ...newField, id: `field-${Date.now()}`, options: newField.type === 'select' ? [] : undefined }] }
           : step
       ))
-      setNewField({ id: '', type: 'text', label: '' })
+      setNewField({ id: '', type: 'text', label: '', required: false })
     }
   }
 
